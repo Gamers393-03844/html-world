@@ -2,36 +2,54 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>HTML World – Ranking</title>
+  <title>HTML World – Gewogen Ranking</title>
 </head>
 <body>
 
-<h1>HTML World – Automatische Ranking (1997)</h1>
+<h1>HTML World – Gewogen Ranking (1997)</h1>
 
-<p>Deze pagina telt automatisch hoeveel links elke pagina krijgt.</p>
+<p>
+Links van pagina’s die zelf veel links krijgen, tellen zwaarder.
+Dit is een simpele versie van PageRank.
+</p>
 
 <ul id="resultaat">
-  <li>Bezig met tellen...</li>
+  <li>Bezig met berekenen...</li>
 </ul>
 
 <a href="index.html">Terug naar Home</a>
 
 <script>
-  // mini-internet (handmatig gedefinieerd, zoals in 1997)
-  const pages = {
+  // mini-internet: wie linkt naar wie
+  const links = {
     "index.html": [],
     "page1.html": ["index.html"],
     "page2.html": ["index.html", "page1.html"],
     "page3.html": ["page1.html", "page2.html"]
   };
 
+  // begin-score: elke pagina start met 1 punt
+  const score = {
+    "index.html": 1,
+    "page1.html": 1,
+    "page2.html": 1,
+    "page3.html": 1
+  };
+
+  // 1 simpele iteratie: score optellen van inkomende links
+  for (let page in links) {
+    links[page].forEach(from => {
+      score[page] += score[from];
+    });
+  }
+
   const ul = document.getElementById("resultaat");
   ul.innerHTML = "";
 
-  for (let page in pages) {
-    const count = pages[page].length;
+  // resultaat tonen
+  for (let page in score) {
     const li = document.createElement("li");
-    li.textContent = page + " krijgt " + count + " link(s)";
+    li.textContent = page + " score: " + score[page];
     ul.appendChild(li);
   }
 </script>
